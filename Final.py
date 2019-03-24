@@ -8,10 +8,18 @@ import sklearn
 from sklearn.preprocessing import Imputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
+# import keras
+# from keras.models import Sequential
+# from keras.layers import Dense
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 
 
 class Window(QWidget):
@@ -265,31 +273,465 @@ class Window(QWidget):
     def accuracy_clicked(self):
 
         if self.algo_number == 1:
-            msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Algorithm Accuracy Check", msg)
+            msg = "Accuracy: " + str(support_vector_machine_algorithm()) + "%"
+            QMessageBox.about(self, "K-Support Vector Machine Accuracy Check", msg)
 
         if self.algo_number == 2:
-            msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Algorithm Accuracy Check", msg)
+            msg = "Accuracy: " + str(knn_algorithm()) + "%"
+            QMessageBox.about(self, "KNN Accuracy Check", msg)
 
         if self.algo_number == 3:
-            msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Algorithm Accuracy Check", msg)
+            msg = "Accuracy: " + str(logistic_regression_algorithm()) + "%"
+            QMessageBox.about(self, "Logistic Regression Accuracy Check", msg)
 
         if self.algo_number == 4:
-            msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Algorithm Accuracy Check", msg)
+            msg = "Accuracy: " + str(naive_bayes_algorithm()) + "%"
+            QMessageBox.about(self, "Naives Bayes Accuracy Check", msg)
 
         if self.algo_number == 5:
-            msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Algorithm Accuracy Check", msg)
+            msg = "Accuracy: " + str(random_forest_algorithm()) + "%"
+            QMessageBox.about(self, "Random Forest Accuracy Check", msg)
 
         if self.algo_number == 6:
             msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Algorithm Accuracy Check", msg)
+            QMessageBox.about(self, "Decision Tree Accuracy Check", msg)
+
+        if self.algo_number == 7:
+            # msg = "Accuracy: " + str(ann_algorithm()) + "%"
+            # QMessageBox.about(self, "ANN Accuracy Check", msg)
+            QMessageBox.about(self, "havent done this yet")
 
     def submit_clicked(self):
         print("submitted")
+
+
+'''
+def ann_algorithm():
+    # Importing the dataset
+    dataset = pd.read_csv("framingham.csv")
+    dataset.drop(['education'], axis=1, inplace=True)
+    dataset.head()
+
+    # Calculating the total observations with NULL values
+    dataset.isnull().sum()
+    count = 0
+    for i in dataset.isnull().sum(axis=1):
+        if i > 0:
+            count = count + 1
+    print('Total number of rows with missing values is ', count)
+
+    # Creating matrix of independent features
+    X = dataset.iloc[:, :-1].values
+
+    # Creating dependent variable vector
+    Y = dataset.iloc[:, 14].values
+
+    # Dealing with missing values
+
+    imputer = Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
+    imputer = imputer.fit(X[:, 0:14])
+    X[:, 0:14] = imputer.transform(X[:, 0:14])
+
+    # Splitting the dataset into the Training set and Test set
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Feature Scaling
+
+    sc_X = StandardScaler()
+    X_train = sc_X.fit_transform(X_train)
+    X_test = sc_X.transform(X_test)
+
+    # Importing the Keras libraries and packages
+
+    # Initialising the ANN
+    classifier = Sequential()
+
+    # Adding the input layer and the first hidden layer
+    classifier.add(Dense(activation="relu", input_dim=14, units=8, kernel_initializer="uniform"))
+
+    # Adding the second hidden layer
+    classifier.add(Dense(activation="relu", units=8, kernel_initializer="uniform"))
+
+    # Adding the output layer
+    classifier.add(Dense(activation='sigmoid', units=1, kernel_initializer='uniform'))
+
+    # Compiling the ANN
+    classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+    # Fitting the ANN to the Training set
+    classifier.fit(X_train, y_train, batch_size=10, epochs=100)
+
+    # Part 3 - Making the predictions and evaluating the model
+
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+    y_pred = (y_pred > 0.5)
+
+    # Making the Confusion Matrix
+    from sklearn.metrics import confusion_matrix
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Accuracy
+    return ('Accuracy:', sklearn.metrics.accuracy_score(y_test, y_pred))
+
+'''
+
+
+def random_forest_algorithm():
+    # Importing the dataset
+    dataset = pd.read_csv("framingham.csv")
+    dataset.drop(['education'], axis=1, inplace=True)
+    dataset.head()
+
+    # Calculating the total observations with NULL values
+    dataset.isnull().sum()
+    count = 0
+    for i in dataset.isnull().sum(axis=1):
+        if i > 0:
+            count = count + 1
+    print('Total number of rows with missing values is ', count)
+
+    # Creating matrix of independent features
+    X = dataset.iloc[:, :-1].values
+
+    # Creating dependent variable vector
+    Y = dataset.iloc[:, 14].values
+
+    # Dealing with missing values
+
+    imputer = Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
+    imputer = imputer.fit(X[:, 0:14])
+    X[:, 0:14] = imputer.transform(X[:, 0:14])
+
+    # Splitting the dataset into the Training set and Test set
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Feature Scaling
+
+    sc_X = StandardScaler()
+    X_train = sc_X.fit_transform(X_train)
+    X_test = sc_X.transform(X_test)
+
+    # Fitting RFC to the Training set
+
+    classifier = RandomForestClassifier(n_estimators=14, criterion='entropy', max_features=14, random_state=0)
+    classifier.fit(X_train, y_train)
+
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+
+    # Making the Confusion Matrix
+
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Applying k-Fold Cross Validation
+
+    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
+    print('Mean accuracy on applying k fold cross validation:', accuracies.mean())
+    accuracies.std()
+
+    '''
+    # Applying Grid Search to find the best model and the best parameters
+    from sklearn.model_selection import GridSearchCV
+    parameters = [{'n_estimators': [8,9,10,11,12,13,14,15], 'criterion': ['gini'], 'max_features':[10,11,12,13,14]},
+                  {'n_estimators': [8,9,10,11,12,13,14,15], 'criterion': ['entropy'], 'max_features':[10,11,12,13,14]}
+                  ]
+    grid_search = GridSearchCV(estimator = classifier,
+                               param_grid = parameters,
+                               scoring = 'accuracy',
+                               cv = 10,
+                               n_jobs = -1)
+    grid_search = grid_search.fit(X_train, y_train)
+    best_accuracy = grid_search.best_score_
+    best_parameters = grid_search.best_params_
+    '''
+
+    # Accuracy
+    return ('Accuracy after applying k fold cross validation and Grid Search:',
+            sklearn.metrics.accuracy_score(y_test, y_pred))
+
+
+def naive_bayes_algorithm():
+    # Importing the dataset
+    dataset = pd.read_csv("framingham.csv")
+    dataset.drop(['education'], axis=1, inplace=True)
+    dataset.head()
+
+    # Calculating the total observations with NULL values
+    dataset.rename(columns={'male': 'Sex_male'}, inplace=True)
+    dataset.isnull().sum()
+    count = 0
+    for i in dataset.isnull().sum(axis=1):
+        if i > 0:
+            count = count + 1
+    print('Total number of rows with missing values is ', count)
+
+    # Creating matrix of independent features
+    X = dataset.iloc[:, :-1].values
+
+    # Creating dependent variable vector
+    Y = dataset.iloc[:, 14].values
+
+    # Dealing with missing values
+
+    imputer = Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
+    imputer = imputer.fit(X[:, 0:14])
+    X[:, 0:14] = imputer.transform(X[:, 0:14])
+
+    # Splitting the dataset into the Training set and Test set
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Feature Scaling
+
+    sc_X = StandardScaler()
+    X_train = sc_X.fit_transform(X_train)
+    X_test = sc_X.transform(X_test)
+
+    # Fitting Naive Bayes to the Training set
+
+    classifier = GaussianNB()
+    classifier.fit(X_train, y_train)
+
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+
+    # Making the Confusion Matrix
+
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Applying k-Fold Cross Validation
+
+    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
+    print('Mean accuracy on applying k fold cross validation:', accuracies.mean())
+    accuracies.std()
+
+    # Accuracy
+    return ('Accuracy:', sklearn.metrics.accuracy_score(y_test, y_pred))
+
+
+def logistic_regression_algorithm():
+    # Importing the dataset
+    dataset = pd.read_csv("framingham.csv")
+    dataset.drop(['education'], axis=1, inplace=True)
+    dataset.head()
+
+    # Calculating the total observations with NULL values
+    dataset.isnull().sum()
+    count = 0
+    for i in dataset.isnull().sum(axis=1):
+        if i > 0:
+            count = count + 1
+    print('Total number of rows with missing values is ', count)
+
+    # Creating matrix of independent features
+    X = dataset.iloc[:, :-1].values
+
+    # Creating dependent variable vector
+    Y = dataset.iloc[:, 14].values
+
+    # Dealing with missing values
+
+    imputer = Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
+    imputer = imputer.fit(X[:, 0:14])
+    X[:, 0:14] = imputer.transform(X[:, 0:14])
+
+    # Splitting the dataset into the Training set and Test set
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Feature Scaling
+
+    sc_X = StandardScaler()
+    X_train = sc_X.fit_transform(X_train)
+    X_test = sc_X.transform(X_test)
+
+    # Fitting Logistic Regression to the Training set
+
+    classifier = LogisticRegression(penalty='l2', solver='newton-cg', max_iter=50, random_state=0)
+    classifier.fit(X_train, y_train)
+
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+
+    # Making the Confusion Matrix
+
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Applying k-Fold Cross Validation
+
+    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
+    print('Mean accuracy on applying k fold cross validation:', accuracies.mean())
+    accuracies.std()
+    '''
+    # Applying Grid Search to find the best model and the best parameters
+    from sklearn.model_selection import GridSearchCV
+    parameters = [{'penalty': ['l1'], 'solver': ['liblinear' , 'saga']},
+                  {'penalty': ['l2'], 'solver': ['newton-cg','lbfgs','sag'],'max_iter':[50,100,200,500]}]
+    grid_search = GridSearchCV(estimator = classifier,
+                               param_grid = parameters,
+                               scoring = 'accuracy',
+                               cv = 10,
+                               n_jobs = -1)
+    grid_search = grid_search.fit(X_train, y_train)
+    best_accuracy = grid_search.best_score_
+    best_parameters = grid_search.best_params_
+    '''
+    # Accuracy
+    return (
+        'Accuracy after applying k fold cross validation and Grid Search:',
+        sklearn.metrics.accuracy_score(y_test, y_pred))
+
+
+def knn_algorithm():
+    # Importing the dataset
+    dataset = pd.read_csv("framingham.csv")
+    dataset.drop(['education'], axis=1, inplace=True)
+    dataset.head()
+
+    # Calculating the total observations with NULL values
+    dataset.isnull().sum()
+    count = 0
+    for i in dataset.isnull().sum(axis=1):
+        if i > 0:
+            count = count + 1
+    print('Total number of rows with missing values is ', count)
+
+    # Creating matrix of independent features
+    X = dataset.iloc[:, :-1].values
+
+    # Creating dependent variable vector
+    Y = dataset.iloc[:, 14].values
+
+    # Dealing with missing values
+
+    imputer = Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
+    imputer = imputer.fit(X[:, 0:14])
+    X[:, 0:14] = imputer.transform(X[:, 0:14])
+
+    # Splitting the dataset into the Training set and Test set
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Feature Scaling
+
+    sc_X = StandardScaler()
+    X_train = sc_X.fit_transform(X_train)
+    X_test = sc_X.transform(X_test)
+
+    # Fitting K-NN to the Training set
+
+    classifier = KNeighborsClassifier(n_neighbors=10, weights='uniform', algorithm='ball_tree', metric='minkowski', p=2)
+    classifier.fit(X_train, y_train)
+
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+
+    # Making the Confusion Matrix
+
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Applying k-Fold Cross Validation
+
+    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
+    print('Mean accuracy on applying k fold cross validation:', accuracies.mean())
+    accuracies.std()
+    '''
+    # Applying Grid Search to find the best model and the best parameters
+    from sklearn.model_selection import GridSearchCV
+    parameters = [{'n_neighbors': [4,5,6,7,8,9,10], 'weights': ['uniform','distance'], 'algorithm':['ball_tree','kd_tree'], 'metric':['minkowski']},
+                 ]
+    grid_search = GridSearchCV(estimator = classifier,
+                               param_grid = parameters,
+                               scoring = 'accuracy',
+                               cv = 10,
+                               n_jobs = -1)
+    grid_search = grid_search.fit(X_train, y_train)
+    best_accuracy = grid_search.best_score_
+    best_parameters = grid_search.best_params_
+    '''
+
+    # Accuracy
+    return (
+        'Accuracy after applying k fold cross validation and Grid Search:',
+        sklearn.metrics.accuracy_score(y_test, y_pred))
+
+
+def support_vector_machine_algorithm():
+    # Importing the dataset
+    dataset = pd.read_csv("framingham.csv")
+    dataset.drop(['education'], axis=1, inplace=True)
+    dataset.head()
+
+    # Calculating the total observations with NULL values
+    dataset.isnull().sum()
+    count = 0
+    for i in dataset.isnull().sum(axis=1):
+        if i > 0:
+            count = count + 1
+    print('Total number of rows with missing values is ', count)
+
+    # Creating matrix of independent features
+    X = dataset.iloc[:, :-1].values
+
+    # Creating dependent variable vector
+    Y = dataset.iloc[:, 14].values
+
+    # Dealing with missing values
+
+    imputer = Imputer(missing_values='NaN', strategy='most_frequent', axis=0)
+    imputer = imputer.fit(X[:, 0:14])
+    X[:, 0:14] = imputer.transform(X[:, 0:14])
+
+    # Splitting the dataset into the Training set and Test set
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+    # Feature Scaling
+
+    sc_X = StandardScaler()
+    X_train = sc_X.fit_transform(X_train)
+    X_test = sc_X.transform(X_test)
+
+    # Fitting Kernel SVM to the Training set
+
+    classifier = SVC(C=1, kernel='rbf', gamma=0.3, random_state=0)
+    classifier.fit(X_train, y_train)
+
+    # Predicting the Test set results
+    y_pred = classifier.predict(X_test)
+
+    # Making the Confusion Matrix
+
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Applying k-Fold Cross Validation
+
+    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
+    print('Mean accuracy on applying k fold cross validation:', accuracies.mean())
+    accuracies.std()
+    '''
+    # Applying Grid Search to find the best model and the best parameters
+    from sklearn.model_selection import GridSearchCV
+    parameters = [{'C': [1,10,100], 'kernel': ['rbf'], 'gamma':[0.1,0.2,0.3,0.4,0.5]},
+                  {'C': [1,10,100,1000], 'kernel': ['sigmoid'], 'gamma':[0.1,0.2,0.3,0.4,0.5]}
+                  ]
+    grid_search = GridSearchCV(estimator = classifier,
+                               param_grid = parameters,
+                               scoring = 'accuracy',
+                               cv = 10,
+                               n_jobs = -1)
+    grid_search = grid_search.fit(X_train, y_train)
+    best_accuracy = grid_search.best_score_
+    best_parameters = grid_search.best_params_
+    '''
+
+    # Accuracy
+    return (
+        'Accuracy after applying k fold cross validation and Grid Search:',
+        sklearn.metrics.accuracy_score(y_test, y_pred))
 
 
 def decision_tree_algorithm():
