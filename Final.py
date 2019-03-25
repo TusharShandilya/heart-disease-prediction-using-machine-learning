@@ -24,8 +24,9 @@ from sklearn.ensemble import RandomForestClassifier
 sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col5': [0], 'col6': [1], 'col7': [1],
           'col8': [395], 'col9': [100], 'col10': [70], 'col11': [23], 'col12': [80], 'col13': [70]}
 
-print("original sample: ", sample)
+y_re = []
 
+# print("original sample: ", sample)
 
 # Importing the dataset
 dataset = pd.read_csv("framingham.csv")
@@ -78,12 +79,7 @@ class Window(QWidget):
         self.lb_BMI = QLabel("BMI")
         self.lb_heart_rate = QLabel("Heart Rate")
         self.lb_glucose = QLabel("Glucose")
-
         self.lb_algorithm = QLabel("Algorithm:")
-
-        self.lb_accuracy = QLabel("[Accuracy:")
-        self.lb_accuracy_output = QLabel("Maanlo 80% hai]")
-
         self.lb_blank = QLabel(" ")
 
         # WIDGETS
@@ -161,7 +157,6 @@ class Window(QWidget):
         # WIDGETS FOR ALGORITHMS
         # Support Vector Machine
         self.algo_SVM = QRadioButton("Support Vector Machine")
-        self.algo_SVM.setChecked(True)
         self.algo_SVM.toggled.connect(self.radiobtn_selected)
 
         # K-Nearest Neighbours
@@ -247,9 +242,6 @@ class Window(QWidget):
         HBox_button.addWidget(self.bn_check)
         HBox_button.addWidget(self.bn_submit)
 
-        # gridLayout_result.addWidget(self.lb_accuracy, 0, 0)
-        # gridLayout_result.addWidget(self.lb_accuracy_output, 0, 1)
-
         # Setting Layout
         VBox_main.addLayout(VBox_up)
         VBox_main.addLayout(HBox_down)
@@ -275,10 +267,6 @@ class Window(QWidget):
             return 0
         else:
             return None
-
-    # CheckBoxes ticked
-    def checkbox_selected(self):
-        print("checkbox toggled")
 
     def radiobtn_selected(self):
         if self.algo_SVM.isChecked():
@@ -307,53 +295,55 @@ class Window(QWidget):
     def accuracy_clicked(self):
 
         if self.algo_number == 1:
-            msg = "Accuracy: " + str(support_vector_machine_algorithm()) + "%"
-            QMessageBox.about(self, "K-Support Vector Machine Accuracy Check", msg)
+            msg = support_vector_machine_algorithm()
+            QMessageBox.about(self, "K-Support Vector Machine Accuracy Check", msg[1])
 
         if self.algo_number == 2:
-            msg = "Accuracy: " + str(knn_algorithm()) + "%"
-            QMessageBox.about(self, "KNN Accuracy Check", msg)
+            msg = knn_algorithm()
+            QMessageBox.about(self, "KNN Accuracy Check", msg[1])
 
         if self.algo_number == 3:
-            msg = "Accuracy: " + str(logistic_regression_algorithm()) + "%"
-            QMessageBox.about(self, "Logistic Regression Accuracy Check", msg)
+            msg = logistic_regression_algorithm()
+            QMessageBox.about(self, "Logistic Regression Accuracy Check", msg[1])
 
         if self.algo_number == 4:
-            msg = "Accuracy: " + str(naive_bayes_algorithm()) + "%"
-            QMessageBox.about(self, "Naives Bayes Accuracy Check", msg)
+            msg = naive_bayes_algorithm()
+            QMessageBox.about(self, "Naives Bayes Accuracy Check", msg[1])
 
         if self.algo_number == 5:
-            msg = "Accuracy: " + str(random_forest_algorithm()) + "%"
-            QMessageBox.about(self, "Random Forest Accuracy Check", msg)
+            msg = random_forest_algorithm()
+            QMessageBox.about(self, "Random Forest Accuracy Check", msg[1])
 
         if self.algo_number == 6:
-            msg = "Accuracy: " + str(decision_tree_algorithm()) + "%"
-            QMessageBox.about(self, "Decision Tree Accuracy Check", msg)
+            msg = decision_tree_algorithm()
+            QMessageBox.about(self, "Decision Tree Accuracy Check", msg[1])
 
         if self.algo_number == 7:
-            # msg = "Accuracy: " + str(ann_algorithm()) + "%"
-            # QMessageBox.about(self, "ANN Accuracy Check", msg)
+            # msg = ann_algorithm()
+            # QMessageBox.about(self, "ANN Accuracy Check", msg[1])
             print('do this')
 
     def submit_clicked(self):
         global sample
 
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Warning)
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+
+        # Adding data to the dict: 'sample'
 
         if self.gender_selected() is None:
-            msg.setWindowTitle("Gender not selected!")
-            msg.setInformativeText("Please select a gender!")
-            msg.exec_()
+            msgBox.setWindowTitle("Gender not selected!")
+            msgBox.setInformativeText("Please select a gender!")
+            msgBox.exec_()
         else:
             sample['col0'] = [self.gender_selected()]
 
         if self.wd_age.text() != '':
             sample['col1'] = [int(self.wd_age.text())]
         else:
-            msg.setWindowTitle("Age not entered!")
-            msg.setInformativeText("Please enter your age!")
-            msg.exec_()
+            msgBox.setWindowTitle("Age not entered!")
+            msgBox.setInformativeText("Please enter your age!")
+            msgBox.exec_()
 
         if self.wd_current_smoker.isChecked():
             sample['col2'] = [1]
@@ -385,46 +375,138 @@ class Window(QWidget):
         if self.wd_cholesterol.text() != '':
             sample['col8'] = [int(self.wd_cholesterol.text())]
         else:
-            msg.setWindowTitle("Cholesterol not entered!")
-            msg.setInformativeText("Please enter your cholesterol level!")
-            msg.exec_()
+            msgBox.setWindowTitle("Cholesterol not entered!")
+            msgBox.setInformativeText("Please enter your cholesterol level!")
+            msgBox.exec_()
 
         if self.wd_sysBP.text() != '':
             sample['col9'] = [int(self.wd_sysBP.text())]
         else:
-            msg.setWindowTitle("Systolic BP not entered!")
-            msg.setInformativeText("Please enter your Systolic Blood Pressure!")
-            msg.exec_()
+            msgBox.setWindowTitle("Systolic BP not entered!")
+            msgBox.setInformativeText("Please enter your Systolic Blood Pressure!")
+            msgBox.exec_()
 
         if self.wd_diaBP.text() != '':
             sample['col10'] = [int(self.wd_diaBP.text())]
         else:
-            msg.setWindowTitle("Cholesterol not entered!")
-            msg.setInformativeText("Please enter your Diastolic Blood Pressure!")
-            msg.exec_()
+            msgBox.setWindowTitle("Cholesterol not entered!")
+            msgBox.setInformativeText("Please enter your Diastolic Blood Pressure!")
+            msgBox.exec_()
 
         if self.wd_BMI.text() != '':
             sample['col11'] = [float(self.wd_BMI.text())]
         else:
-            msg.setWindowTitle("BMI not entered!")
-            msg.setInformativeText("Please enter your Body Mass Index")
-            msg.exec_()
+            msgBox.setWindowTitle("BMI not entered!")
+            msgBox.setInformativeText("Please enter your Body Mass Index")
+            msgBox.exec_()
 
         if self.wd_heart_rate.text() != '':
             sample['col12'] = [int(self.wd_heart_rate.text())]
         else:
-            msg.setWindowTitle("Heart Rate not entered!")
-            msg.setInformativeText("Please enter your Heart Rate!")
-            msg.exec_()
+            msgBox.setWindowTitle("Heart Rate not entered!")
+            msgBox.setInformativeText("Please enter your Heart Rate!")
+            msgBox.exec_()
 
         if self.wd_glucose.text() != '':
             sample['col13'] = [int(self.wd_glucose.text())]
         else:
-            msg.setWindowTitle("Glucose not entered!")
-            msg.setInformativeText("Please enter your glucose level!")
-            msg.exec_()
+            msgBox.setWindowTitle("Glucose not entered!")
+            msgBox.setInformativeText("Please enter your glucose level!")
+            msgBox.exec_()
 
-        print(sample)
+        # Giving the prediction
+
+        if self.algo_number == 1:
+            prediction = support_vector_machine_algorithm()
+
+            if prediction[0] == 0:
+                print('alive')
+                msgBox.setWindowTitle('Congratulations')
+                msgBox.setInformativeText('Your body is healthy')
+                msgBox.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msgBox.setWindowTitle('Prediction Result')
+                msgBox.setInformativeText('You \'re likely to die.')
+                msgBox.exec_()
+
+        if self.algo_number == 2:
+            prediction = knn_algorithm()
+
+            if prediction[0] == 0:
+                print('alive')
+                msgBox.setWindowTitle('Congratulations')
+                msgBox.setInformativeText('Your body is healthy')
+                msgBox.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msgBox.setWindowTitle('Prediction Result')
+                msgBox.setInformativeText('You \'re likely to die.')
+                msgBox.exec_()
+
+        if self.algo_number == 3:
+            prediction = logistic_regression_algorithm()
+
+            if prediction[0] == 0:
+                print('alive')
+                msgBox.setWindowTitle('Congratulations')
+                msgBox.setInformativeText('Your body is healthy')
+                msgBox.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msgBox.setWindowTitle('Prediction Result')
+                msgBox.setInformativeText('You \'re likely to die.')
+                msgBox.exec_()
+
+        if self.algo_number == 4:
+            prediction = naive_bayes_algorithm()
+
+            if prediction[0] == 0:
+                print('alive')
+                msgBox.setWindowTitle('Congratulations')
+                msgBox.setInformativeText('Your body is healthy')
+                msgBox.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msgBox.setWindowTitle('Prediction Result')
+                msgBox.setInformativeText('You \'re likely to die.')
+                msgBox.exec_()
+
+        if self.algo_number == 5:
+            prediction = random_forest_algorithm()
+
+            if prediction[0] == 0:
+                print('alive')
+                msgBox.setWindowTitle('Congratulations')
+                msgBox.setInformativeText('Your body is healthy')
+                msgBox.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msgBox.setWindowTitle('Prediction Result')
+                msgBox.setInformativeText('You \'re likely to die.')
+                msgBox.exec_()
+
+        if self.algo_number == 6:
+
+            prediction = decision_tree_algorithm()
+
+            if prediction[0] == 0:
+                print('alive')
+                msgBox.setWindowTitle('Congratulations')
+                msgBox.setInformativeText('Your body is healthy')
+                msgBox.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msgBox.setWindowTitle('Prediction Result')
+                msgBox.setInformativeText('You \'re likely to die.')
+                msgBox.exec_()
+
+        if self.algo_number == 7:
+            # msgBox = "Accuracy: " + str(ann_algorithm()) + "%"
+            # QMessageBox.about(self, "ANN Accuracy Check", msgBox)
+            print('do this')
+
+
 
 
 '''
@@ -456,9 +538,16 @@ def ann_algorithm():
     y_pred = classifier.predict(X_test)
     y_pred = (y_pred > 0.5)
 
-    
+    global y_re
+    sample_re = pd.DataFrame(data=sample)
+    sample_re = sc_X.transform(sample_re)
+    y_re = classifier.predict(sample_re)
+    print(y_re)
+
+    a = int(y_re)
+    b = 'Accuracy: ' +  str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
     # Accuracy
-    return ('Accuracy:', sklearn.metrics.accuracy_score(y_test, y_pred))
+    return [a, b]
 
 '''
 
@@ -472,9 +561,16 @@ def random_forest_algorithm():
     # Predicting the Test set results
     y_pred = classifier.predict(X_test)
 
+    global y_re
+    sample_re = pd.DataFrame(data=sample)
+    sample_re = sc_X.transform(sample_re)
+    y_re = classifier.predict(sample_re)
+    print(y_re)
+
+    a = int(y_re)
+    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
     # Accuracy
-    return ('Accuracy after applying k fold cross validation and Grid Search:',
-            sklearn.metrics.accuracy_score(y_test, y_pred))
+    return [a, b]
 
 
 def naive_bayes_algorithm():
@@ -486,18 +582,16 @@ def naive_bayes_algorithm():
     # Predicting the Test set results
     y_pred = classifier.predict(X_test)
 
-    # Making the Confusion Matrix
+    global y_re
+    sample_re = pd.DataFrame(data=sample)
+    sample_re = sc_X.transform(sample_re)
+    y_re = classifier.predict(sample_re)
+    print(y_re)
 
-    cm = confusion_matrix(y_test, y_pred)
-
-    # Applying k-Fold Cross Validation
-
-    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
-    print('Mean accuracy on applying k fold cross validation:', accuracies.mean())
-    accuracies.std()
-
+    a = int(y_re)
+    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
     # Accuracy
-    return ('Accuracy:', sklearn.metrics.accuracy_score(y_test, y_pred))
+    return [a, b]
 
 
 def logistic_regression_algorithm():
@@ -509,10 +603,16 @@ def logistic_regression_algorithm():
     # Predicting the Test set results
     y_pred = classifier.predict(X_test)
 
+    global y_re
+    sample_re = pd.DataFrame(data=sample)
+    sample_re = sc_X.transform(sample_re)
+    y_re = classifier.predict(sample_re)
+    print(y_re)
+
+    a = int(y_re)
+    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
     # Accuracy
-    return (
-        'Accuracy after applying k fold cross validation and Grid Search:',
-        sklearn.metrics.accuracy_score(y_test, y_pred))
+    return [a, b]
 
 
 def knn_algorithm():
@@ -525,9 +625,16 @@ def knn_algorithm():
     y_pred = classifier.predict(X_test)
 
     # Accuracy
-    return (
-        'Accuracy after applying k fold cross validation and Grid Search:',
-        sklearn.metrics.accuracy_score(y_test, y_pred))
+    global y_re
+    sample_re = pd.DataFrame(data=sample)
+    sample_re = sc_X.transform(sample_re)
+    y_re = classifier.predict(sample_re)
+    print(y_re)
+
+    a = int(y_re)
+    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
+    # Accuracy
+    return [a, b]
 
 
 def support_vector_machine_algorithm():
@@ -540,9 +647,16 @@ def support_vector_machine_algorithm():
     y_pred = classifier.predict(X_test)
 
     # Accuracy
-    return (
-        'Accuracy after applying k fold cross validation and Grid Search:',
-        sklearn.metrics.accuracy_score(y_test, y_pred))
+    global y_re
+    sample_re = pd.DataFrame(data=sample)
+    sample_re = sc_X.transform(sample_re)
+    y_re = classifier.predict(sample_re)
+    print(y_re)
+
+    a = int(y_re)
+    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
+    # Accuracy
+    return [a, b]
 
 
 def decision_tree_algorithm():
@@ -555,14 +669,18 @@ def decision_tree_algorithm():
     y_pred = classifier.predict(X_test)
 
     # Converting Input from user to Dataset and getting the output
-    sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col5': [0], 'col6': [1], 'col7': [1],
-              'col8': [395], 'col9': [100], 'col10': [70], 'col11': [23], 'col12': [80], 'col13': [70]}
+    # sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col5': [0], 'col6': [1], 'col7': [1],
+    #           'col8': [395], 'col9': [100], 'col10': [70], 'col11': [23], 'col12': [80], 'col13': [70]}
+    global y_re
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
+    print(y_re)
 
+    a = int(y_re)
+    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
     # Accuracy
-    return (sklearn.metrics.accuracy_score(y_test, y_pred) * 100)
+    return [a, b]
 
 
 app = QApplication(sys.argv)
