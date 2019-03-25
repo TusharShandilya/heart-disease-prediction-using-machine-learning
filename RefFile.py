@@ -28,7 +28,11 @@ imputer = imputer.fit(X[:, 0:14])
 X[:, 0:14] = imputer.transform(X[:, 0:14])
 
 # Splitting the dataset into the Training set and Test set
+<<<<<<< HEAD
 from sklearn.model_selection import train_test_split
+=======
+from sklearn.cross_validation import train_test_split
+>>>>>>> 211ff0aed2cb720fd0586591f8a211c973c98679
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.25, random_state = 0)
 
 # Feature Scaling
@@ -54,6 +58,7 @@ sample_re=sc_X.transform(sample_re)
 y_re=classifier.predict(sample_re)
 
 print(y_re)
+
 
 #Accuracy
 print('Accuracy after applying k fold cross validation and Grid Search:',sklearn.metrics.accuracy_score(y_test,y_pred))
