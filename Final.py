@@ -1,9 +1,9 @@
 import sys
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import *
-import numpy as np
+# import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import sklearn
 from sklearn.preprocessing import Imputer
 from sklearn.model_selection import train_test_split
@@ -70,7 +70,7 @@ class Window(QWidget):
         self.lb_current_smoker = QLabel("Current Smoker")
         self.lb_cigs_per_day = QLabel("Cigarettes Per Day")
         self.lb_BP_meds = QLabel("BP Medication")
-        self.lb_prevalent_stroke = QLabel("Prevalent Smoker")
+        self.lb_prevalent_stroke = QLabel("Prevalent Stroke")
         self.lb_prevalent_hyp = QLabel("Prevalent Hypertension")
         self.lb_diabetic = QLabel("Diabetic")
         self.lb_cholesterol = QLabel("Cholesterol")
@@ -348,15 +348,6 @@ class Window(QWidget):
             msgBox.setInformativeText("Please enter your age!")
             msgBox.exec_()
 
-        # if self.wd_current_smoker.isChecked():
-        #     sample['col2'] = [1]
-        # else:
-        #     sample['col2'] = [0]
-        #     self.wd_cigs_per_day.setText('0')
-        #     sample['col3'] = [self.wd_cigs_per_day.text()]
-        #
-        # print(self.wd_current_smoker.isChecked())
-        # print(type(self.wd_cigs_per_day.text()))
 
         if self.wd_current_smoker.isChecked():
             sample['col2'] = [1]
