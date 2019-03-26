@@ -26,7 +26,7 @@ sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col
 
 y_re = []
 
-# print("original sample: ", sample)
+print("original sample: ", sample)
 
 # Importing the dataset
 dataset = pd.read_csv("framingham.csv")
@@ -348,12 +348,30 @@ class Window(QWidget):
             msgBox.setInformativeText("Please enter your age!")
             msgBox.exec_()
 
+        # if self.wd_current_smoker.isChecked():
+        #     sample['col2'] = [1]
+        # else:
+        #     sample['col2'] = [0]
+        #     self.wd_cigs_per_day.setText('0')
+        #     sample['col3'] = [self.wd_cigs_per_day.text()]
+        #
+        # print(self.wd_current_smoker.isChecked())
+        # print(type(self.wd_cigs_per_day.text()))
+
         if self.wd_current_smoker.isChecked():
             sample['col2'] = [1]
-            sample['col3'] = [self.wd_cigs_per_day.text()]
+            if self.wd_cigs_per_day.text() != '' or self.wd_cigs_per_day.text() != '0':
+                sample['col3'] = [self.wd_cigs_per_day.text()]
+            else:
+                msgBox.setWindowTitle("Invalid Input!")
+                msgBox.setInformativeText("Please enter more than 0 number of cigarettes per day!")
+                msgBox.exec_()
         else:
             sample['col2'] = [0]
-            self.wd_cigs_per_day.setText(0)
+            self.wd_cigs_per_day.setText('0')
+            sample['col3'] = [self.wd_cigs_per_day.text()]
+
+                
 
         if self.wd_BP_meds.isChecked():
             sample['col4'] = [1]
@@ -416,6 +434,8 @@ class Window(QWidget):
             msgBox.setWindowTitle("Glucose not entered!")
             msgBox.setInformativeText("Please enter your glucose level!")
             msgBox.exec_()
+
+        print('afterwards: ', sample)
 
         # Giving the prediction
 
