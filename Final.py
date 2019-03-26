@@ -258,6 +258,9 @@ class Window(QWidget):
     # FUNCTIONS FOR WIDGETS
     algo_number = 0
 
+    def checkbox_selected(self):
+        pass
+
     # wd_gender Combo Box
     def gender_selected(self):
         text = self.wd_gender.currentText()
@@ -505,8 +508,6 @@ class Window(QWidget):
             # msgBox = "Accuracy: " + str(ann_algorithm()) + "%"
             # QMessageBox.about(self, "ANN Accuracy Check", msgBox)
             print('do this')
-
-
 
 
 '''
