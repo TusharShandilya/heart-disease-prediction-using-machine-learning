@@ -564,11 +564,10 @@ def random_forest_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
-
-    a = int(y_re)
-    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
-    # Accuracy
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
+    # Accuracy and Prediction
     return [a, b]
 
 
@@ -585,13 +584,11 @@ def naive_bayes_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
-
-    a = int(y_re)
-    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
-    # Accuracy
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
+    # Accuracy and Prediction
     return [a, b]
-
 
 def logistic_regression_algorithm():
     # Fitting Logistic Regression to the Training set
@@ -606,14 +603,12 @@ def logistic_regression_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
     a = int(y_re)    
     y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
     b = 'Accuracy: ' + str(y) + "%"
-    # Accuracy
+    # Accuracy and Prediction
     return [a, b]
-
-
+ 
 
 def knn_algorithm():
     # Fitting K-NN to the Training set
@@ -629,11 +624,10 @@ def knn_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
-
-    a = int(y_re)
-    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
-    # Accuracy
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
+    # Accuracy and Prediction
     return [a, b]
 
 
@@ -651,11 +645,10 @@ def support_vector_machine_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
-
-    a = int(y_re)
-    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
-    # Accuracy
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
+    # Accuracy and Prediction
     return [a, b]
 
 
@@ -672,11 +665,10 @@ def decision_tree_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
-
-    a = int(y_re)
-    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
-    # Accuracy
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
+    # Accuracy and Prediction
     return [a, b]
 
 
