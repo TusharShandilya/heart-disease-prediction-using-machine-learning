@@ -607,12 +607,12 @@ def logistic_regression_algorithm():
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
     print(y_re)
-    x = int(y_re)
-    a = ("{0:.2f}".format(round(x, 2)))
-
-    b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
     # Accuracy
     return [a, b]
+
 
 
 def knn_algorithm():
@@ -683,3 +683,4 @@ def decision_tree_algorithm():
 app = QApplication(sys.argv)
 a_window = Window()
 sys.exit(app.exec_())
+# app.exec_()
