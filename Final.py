@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import *
 # import numpy as np
 import pandas as pd
@@ -179,7 +179,7 @@ class Window(QWidget):
         # ANN
         self.algo_ANN = QRadioButton("Artificial Neural Networks")
         self.algo_ANN.toggled.connect(self.radiobtn_selected)
-        self.algo_ANN.setWhatsThis("WARNING: This option will take longer to give a result")
+        
 
         # BUTTONS
         self.bn_check = QPushButton("Check Accuracy")
@@ -293,7 +293,7 @@ class Window(QWidget):
 
         elif self.algo_ANN.isChecked():
             self.algo_number = 7
-        
+                    
 
     def accuracy_clicked(self):
 
@@ -321,7 +321,7 @@ class Window(QWidget):
             msg = decision_tree_algorithm()
             QMessageBox.about(self, "Decision Tree Accuracy Check", msg[1])
 
-        elif self.algo_number == 7:        
+        elif self.algo_number == 7:     
             msg = ann_algorithm()            
             QMessageBox.about(self, "ANN Accuracy Check", msg[1])            
         else:
@@ -508,6 +508,13 @@ class Window(QWidget):
 
 
 def ann_algorithm():
+    msg_wait = QMessageBox()
+    msg_wait.setWindowTitle('Patience')
+    msg_wait.setInformativeText('\t \t')
+    msg_wait.setWindowIcon(QtGui.QIcon('meditation.png'))
+    # msg_wait.setWindowModality(QtCore.Qt.NonModal)
+    # msg_wait.setDetailedText("This option takes longer than usual")
+    msg_wait.open()
     
     # Importing the Keras libraries and packages
 
@@ -545,6 +552,7 @@ def ann_algorithm():
     y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
     b = 'Accuracy: ' + str(y) + "%"
     
+    msg_wait.close()
     # Accuracy and Prediction
     return [a, b]
 
