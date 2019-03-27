@@ -8,12 +8,9 @@ import sklearn
 from sklearn.preprocessing import Imputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import cross_val_score
-# import keras
-# from keras.models import Sequential
-# from keras.layers import Dense
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -26,7 +23,7 @@ sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col
 
 y_re = []
 
-print("original sample: ", sample)
+# print("original sample: ", sample)
 
 # Importing the dataset
 dataset = pd.read_csv("framingham.csv")
@@ -173,12 +170,16 @@ class Window(QWidget):
 
         # Decision Tree
         self.algo_DT = QRadioButton("Decision Tree")
+        self.algo_DT.toggled.connect(self.radiobtn_selected)
 
         # Random Forest
         self.algo_RF = QRadioButton("Random Forest")
+        self.algo_RF.toggled.connect(self.radiobtn_selected)
 
         # ANN
         self.algo_ANN = QRadioButton("Artificial Neural Networks")
+        self.algo_ANN.toggled.connect(self.radiobtn_selected)
+        self.algo_ANN.setWhatsThis("WARNING: This option will take longer to give a result")
 
         # BUTTONS
         self.bn_check = QPushButton("Check Accuracy")
@@ -287,13 +288,12 @@ class Window(QWidget):
         elif self.algo_RF.isChecked():
             self.algo_number = 5
 
-        elif self.algo_DT.isChecked():
+        elif self.algo_DT.isChecked():            
             self.algo_number = 6
 
         elif self.algo_ANN.isChecked():
             self.algo_number = 7
-        else:
-            print("I have not programmed that path yet")
+        
 
     def accuracy_clicked(self):
 
@@ -301,30 +301,32 @@ class Window(QWidget):
             msg = support_vector_machine_algorithm()
             QMessageBox.about(self, "K-Support Vector Machine Accuracy Check", msg[1])
 
-        if self.algo_number == 2:
+        elif self.algo_number == 2:
             msg = knn_algorithm()
             QMessageBox.about(self, "KNN Accuracy Check", msg[1])
 
-        if self.algo_number == 3:
+        elif self.algo_number == 3:
             msg = logistic_regression_algorithm()
             QMessageBox.about(self, "Logistic Regression Accuracy Check", msg[1])
 
-        if self.algo_number == 4:
+        elif self.algo_number == 4:
             msg = naive_bayes_algorithm()
             QMessageBox.about(self, "Naives Bayes Accuracy Check", msg[1])
 
-        if self.algo_number == 5:
+        elif self.algo_number == 5:
             msg = random_forest_algorithm()
             QMessageBox.about(self, "Random Forest Accuracy Check", msg[1])
 
-        if self.algo_number == 6:
+        elif self.algo_number == 6:
             msg = decision_tree_algorithm()
             QMessageBox.about(self, "Decision Tree Accuracy Check", msg[1])
 
-        if self.algo_number == 7:
-            # msg = ann_algorithm()
-            # QMessageBox.about(self, "ANN Accuracy Check", msg[1])
-            print('do this')
+        elif self.algo_number == 7:        
+            msg = ann_algorithm()            
+            QMessageBox.about(self, "ANN Accuracy Check", msg[1])            
+        else:
+            QMessageBox.about(self, "No algotihm selected", "Please select an algorithm")
+            
 
     def submit_clicked(self):
         global sample
@@ -423,8 +425,7 @@ class Window(QWidget):
             msgBox.setInformativeText("Please enter your glucose level!")
             msgBox.exec_()
 
-        print('afterwards: ', sample)
-
+     
         # Giving the prediction
 
         msg_good = QMessageBox()
@@ -442,7 +443,6 @@ class Window(QWidget):
 
         if self.algo_number == 1:
             prediction = support_vector_machine_algorithm()
-
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
@@ -452,7 +452,6 @@ class Window(QWidget):
 
         if self.algo_number == 2:
             prediction = knn_algorithm()
-
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
@@ -462,7 +461,6 @@ class Window(QWidget):
 
         if self.algo_number == 3:
             prediction = logistic_regression_algorithm()
-
             if prediction[0] == 0:
                 print('alive')
 
@@ -473,7 +471,6 @@ class Window(QWidget):
 
         if self.algo_number == 4:
             prediction = naive_bayes_algorithm()
-
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
@@ -483,7 +480,6 @@ class Window(QWidget):
 
         if self.algo_number == 5:
             prediction = random_forest_algorithm()
-
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
@@ -492,9 +488,7 @@ class Window(QWidget):
                 msg_bad.exec_()
 
         if self.algo_number == 6:
-
             prediction = decision_tree_algorithm()
-
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
@@ -502,13 +496,17 @@ class Window(QWidget):
                 print('ded')
                 msg_bad.exec_()
 
-        if self.algo_number == 7:
-            # msgBox = "Accuracy: " + str(ann_algorithm()) + "%"
-            # QMessageBox.about(self, "ANN Accuracy Check", msgBox)
-            print('do this')
+        if self.algo_number == 7:            
+            prediction = ann_algorithm()
+            if prediction[0] == 0:
+                print('alive')
+                msg_good.exec_()
+            elif prediction[0] == 1:
+                print('ded')
+                msg_bad.exec_()
 
 
-'''
+
 def ann_algorithm():
     
     # Importing the Keras libraries and packages
@@ -527,28 +525,29 @@ def ann_algorithm():
 
     # Compiling the ANN
     classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-
+    
     # Fitting the ANN to the Training set
     classifier.fit(X_train, y_train, batch_size=10, epochs=100)
-
+    
     # Part 3 - Making the predictions and evaluating the model
 
     # Predicting the Test set results
     y_pred = classifier.predict(X_test)
     y_pred = (y_pred > 0.5)
-
+    
     global y_re
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    print(y_re)
-
-    a = int(y_re)
-    b = 'Accuracy: ' +  str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
-    # Accuracy
+    
+    # print(y_re)
+    a = int(y_re)    
+    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    b = 'Accuracy: ' + str(y) + "%"
+    
+    # Accuracy and Prediction
     return [a, b]
 
-'''
 
 
 def random_forest_algorithm():
