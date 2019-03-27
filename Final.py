@@ -23,6 +23,21 @@ sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col
 
 y_re = []
 
+# Patience Dialog
+dialog_image = QLabel()
+dialog_image.setPixmap(QtGui.QPixmap('Images/meditation.png'))
+dialog_image.setAlignment(QtCore.Qt.AlignCenter)
+dialog_text = QLabel()
+dialog_text.setText('This algorithm takes longer than usual.\n Bear with us...')
+dialog_patience = QDialog()
+dialog_patience.setWindowTitle("Dialog")
+dialog_patience.setWindowIcon(QtGui.QIcon('Images/heart.png'))
+dialog_patience.setWindowModality(QtCore.Qt.NonModal)
+dialog_layout = QVBoxLayout()
+dialog_layout.addWidget(dialog_image)
+dialog_layout.addWidget(dialog_text)
+dialog_patience.setLayout(dialog_layout)
+
 # print("original sample: ", sample)
 
 # Importing the dataset
@@ -179,7 +194,6 @@ class Window(QWidget):
         # ANN
         self.algo_ANN = QRadioButton("Artificial Neural Networks")
         self.algo_ANN.toggled.connect(self.radiobtn_selected)
-        
 
         # BUTTONS
         self.bn_check = QPushButton("Check Accuracy")
@@ -188,7 +202,7 @@ class Window(QWidget):
         self.bn_submit = QPushButton("Submit")
         self.bn_submit.clicked.connect(self.submit_clicked)
 
-        # LAYOUTS
+        # LAYOUTS        
         VBox_main = QVBoxLayout()
         VBox_up = QVBoxLayout()
         HBox_down = QHBoxLayout()
@@ -288,12 +302,11 @@ class Window(QWidget):
         elif self.algo_RF.isChecked():
             self.algo_number = 5
 
-        elif self.algo_DT.isChecked():            
+        elif self.algo_DT.isChecked():
             self.algo_number = 6
 
         elif self.algo_ANN.isChecked():
             self.algo_number = 7
-                    
 
     def accuracy_clicked(self):
 
@@ -321,12 +334,11 @@ class Window(QWidget):
             msg = decision_tree_algorithm()
             QMessageBox.about(self, "Decision Tree Accuracy Check", msg[1])
 
-        elif self.algo_number == 7:     
-            msg = ann_algorithm()            
-            QMessageBox.about(self, "ANN Accuracy Check", msg[1])            
+        elif self.algo_number == 7:
+            msg = ann_algorithm()
+            QMessageBox.about(self, "ANN Accuracy Check", msg[1])
         else:
             QMessageBox.about(self, "No algotihm selected", "Please select an algorithm")
-            
 
     def submit_clicked(self):
         global sample
@@ -425,7 +437,6 @@ class Window(QWidget):
             msgBox.setInformativeText("Please enter your glucose level!")
             msgBox.exec_()
 
-     
         # Giving the prediction
 
         msg_good = QMessageBox()
@@ -496,7 +507,7 @@ class Window(QWidget):
                 print('ded')
                 msg_bad.exec_()
 
-        if self.algo_number == 7:            
+        if self.algo_number == 7:
             prediction = ann_algorithm()
             if prediction[0] == 0:
                 print('alive')
@@ -506,16 +517,17 @@ class Window(QWidget):
                 msg_bad.exec_()
 
 
-
 def ann_algorithm():
-    msg_wait = QMessageBox()
-    msg_wait.setWindowTitle('Patience')
-    msg_wait.setInformativeText('\t \t')
-    msg_wait.setWindowIcon(QtGui.QIcon('meditation.png'))
+    # msg_wait = QMessageBox()
+    # msg_wait.setWindowTitle('Patience')
+    # msg_wait.setInformativeText('\t \t')
+    # msg_wait.setWindowIcon(QtGui.QIcon('meditation.png'))
     # msg_wait.setWindowModality(QtCore.Qt.NonModal)
     # msg_wait.setDetailedText("This option takes longer than usual")
-    msg_wait.open()
-    
+    # msg_wait.open()
+
+    dialog_patience.open()
+
     # Importing the Keras libraries and packages
 
     # Initialising the ANN
@@ -532,30 +544,30 @@ def ann_algorithm():
 
     # Compiling the ANN
     classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    
+
     # Fitting the ANN to the Training set
     classifier.fit(X_train, y_train, batch_size=10, epochs=100)
-    
+
     # Part 3 - Making the predictions and evaluating the model
 
     # Predicting the Test set results
     y_pred = classifier.predict(X_test)
     y_pred = (y_pred > 0.5)
-    
+
     global y_re
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    
+
     # print(y_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
-    
-    msg_wait.close()
+
+    # msg_wait.close()
+    dialog_patience.close()
     # Accuracy and Prediction
     return [a, b]
-
 
 
 def random_forest_algorithm():
@@ -571,8 +583,8 @@ def random_forest_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
     # Accuracy and Prediction
     return [a, b]
@@ -591,11 +603,12 @@ def naive_bayes_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
     # Accuracy and Prediction
     return [a, b]
+
 
 def logistic_regression_algorithm():
     # Fitting Logistic Regression to the Training set
@@ -610,12 +623,12 @@ def logistic_regression_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
     # Accuracy and Prediction
     return [a, b]
- 
+
 
 def knn_algorithm():
     # Fitting K-NN to the Training set
@@ -631,8 +644,8 @@ def knn_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
     # Accuracy and Prediction
     return [a, b]
@@ -652,8 +665,8 @@ def support_vector_machine_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
     # Accuracy and Prediction
     return [a, b]
@@ -672,8 +685,8 @@ def decision_tree_algorithm():
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
-    a = int(y_re)    
-    y  = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))    
+    a = int(y_re)
+    y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
     # Accuracy and Prediction
     return [a, b]
