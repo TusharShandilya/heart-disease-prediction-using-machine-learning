@@ -348,7 +348,6 @@ class Window(QWidget):
             msgBox.setInformativeText("Please enter your age!")
             msgBox.exec_()
 
-
         if self.wd_current_smoker.isChecked():
             sample['col2'] = [1]
             if self.wd_cigs_per_day.text() != '' or self.wd_cigs_per_day.text() != '0':
@@ -361,8 +360,6 @@ class Window(QWidget):
             sample['col2'] = [0]
             self.wd_cigs_per_day.setText('0')
             sample['col3'] = [self.wd_cigs_per_day.text()]
-
-                
 
         if self.wd_BP_meds.isChecked():
             sample['col4'] = [1]
@@ -430,75 +427,69 @@ class Window(QWidget):
 
         # Giving the prediction
 
+        msg_good = QMessageBox()
+        msg_good.setWindowTitle('Prediction Result')
+        msg_good.setInformativeText('You are healthy.')
+        msg_good.setIcon(QMessageBox.Information)
+        msg_good.setWindowIcon(QtGui.QIcon('heart_healthy.png'))
+
+        msg_bad = QMessageBox()
+        msg_bad.setWindowTitle('Prediction Result')
+        msg_bad.setInformativeText('You \'re at risk.')
+        msg_bad.setIcon(QMessageBox.Critical)
+        msg_bad.setDetailedText('visit us at healthtips.info')
+        msg_bad.setWindowIcon(QtGui.QIcon('heart-rate-monitor.png'))
+
         if self.algo_number == 1:
             prediction = support_vector_machine_algorithm()
 
             if prediction[0] == 0:
                 print('alive')
-                msgBox.setWindowTitle('Congratulations')
-                msgBox.setInformativeText('Your body is healthy')
-                msgBox.exec_()
+                msg_good.exec_()
             elif prediction[0] == 1:
                 print('ded')
-                msgBox.setWindowTitle('Prediction Result')
-                msgBox.setInformativeText('You \'re likely to die.')
-                msgBox.exec_()
+                msg_bad.exec_()
 
         if self.algo_number == 2:
             prediction = knn_algorithm()
 
             if prediction[0] == 0:
                 print('alive')
-                msgBox.setWindowTitle('Congratulations')
-                msgBox.setInformativeText('Your body is healthy')
-                msgBox.exec_()
+                msg_good.exec_()
             elif prediction[0] == 1:
                 print('ded')
-                msgBox.setWindowTitle('Prediction Result')
-                msgBox.setInformativeText('You \'re likely to die.')
-                msgBox.exec_()
+                msg_bad.exec_()
 
         if self.algo_number == 3:
             prediction = logistic_regression_algorithm()
 
             if prediction[0] == 0:
                 print('alive')
-                msgBox.setWindowTitle('Congratulations')
-                msgBox.setInformativeText('Your body is healthy')
-                msgBox.exec_()
+
+                msg_good.exec_()
             elif prediction[0] == 1:
                 print('ded')
-                msgBox.setWindowTitle('Prediction Result')
-                msgBox.setInformativeText('You \'re likely to die.')
-                msgBox.exec_()
+                msg_bad.exec_()
 
         if self.algo_number == 4:
             prediction = naive_bayes_algorithm()
 
             if prediction[0] == 0:
                 print('alive')
-                msgBox.setWindowTitle('Congratulations')
-                msgBox.setInformativeText('Your body is healthy')
-                msgBox.exec_()
+                msg_good.exec_()
             elif prediction[0] == 1:
                 print('ded')
-                msgBox.setWindowTitle('Prediction Result')
-                msgBox.setInformativeText('You \'re likely to die.')
-                msgBox.exec_()
+                msg_bad.exec_()
 
         if self.algo_number == 5:
             prediction = random_forest_algorithm()
 
             if prediction[0] == 0:
                 print('alive')
-                msgBox.setWindowTitle('Congratulations')
-                msgBox.setInformativeText('Your body is healthy')
-                msgBox.exec_()
+                msg_good.exec_()
             elif prediction[0] == 1:
                 print('ded')
-                msgBox.setWindowTitle('Prediction Result')
-                msgBox.setInformativeText('You \'re likely to die.')
-                msgBox.exec_()
+                msg_bad.exec_()
 
         if self.algo_number == 6:
 
@@ -506,14 +497,10 @@ class Window(QWidget):
 
             if prediction[0] == 0:
                 print('alive')
-                msgBox.setWindowTitle('Congratulations')
-                msgBox.setInformativeText('Your body is healthy')
-                msgBox.exec_()
+                msg_good.exec_()
             elif prediction[0] == 1:
                 print('ded')
-                msgBox.setWindowTitle('Prediction Result')
-                msgBox.setInformativeText('You \'re likely to die.')
-                msgBox.exec_()
+                msg_bad.exec_()
 
         if self.algo_number == 7:
             # msgBox = "Accuracy: " + str(ann_algorithm()) + "%"
@@ -620,8 +607,9 @@ def logistic_regression_algorithm():
     sample_re = sc_X.transform(sample_re)
     y_re = classifier.predict(sample_re)
     print(y_re)
+    x = int(y_re)
+    a = ("{0:.2f}".format(round(x, 2)))
 
-    a = int(y_re)
     b = 'Accuracy: ' + str(sklearn.metrics.accuracy_score(y_test, y_pred) * 100) + "%"
     # Accuracy
     return [a, b]
@@ -680,9 +668,6 @@ def decision_tree_algorithm():
     # Predicting the Test set results
     y_pred = classifier.predict(X_test)
 
-    # Converting Input from user to Dataset and getting the output
-    # sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col5': [0], 'col6': [1], 'col7': [1],
-    #           'col8': [395], 'col9': [100], 'col10': [70], 'col11': [23], 'col12': [80], 'col13': [70]}
     global y_re
     sample_re = pd.DataFrame(data=sample)
     sample_re = sc_X.transform(sample_re)
