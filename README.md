@@ -1,6 +1,7 @@
 # major-project-2019
 ## Heart disease prediction using machine learning (B.Tech major project)
 
+<-- Add abstract from project here + Graphs from matplot lib -->
 
 <ul>
     <li>possible future changes</li>
