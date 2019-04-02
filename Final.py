@@ -24,19 +24,19 @@ sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col
 y_re = []
 
 # Patience Dialog
-dialog_image = QLabel()
-dialog_image.setPixmap(QtGui.QPixmap('Images/meditation.png'))
-dialog_image.setAlignment(QtCore.Qt.AlignCenter)
-dialog_text = QLabel()
-dialog_text.setText('This algorithm takes longer than usual.\n Bear with us...')
-dialog_patience = QDialog()
-dialog_patience.setWindowTitle("Dialog")
-dialog_patience.setWindowIcon(QtGui.QIcon('Images/heart.png'))
-dialog_patience.setWindowModality(QtCore.Qt.NonModal)
-dialog_layout = QVBoxLayout()
-dialog_layout.addWidget(dialog_image)
-dialog_layout.addWidget(dialog_text)
-dialog_patience.setLayout(dialog_layout)
+# dialog_image = QLabel()
+# dialog_image.setPixmap(QtGui.QPixmap('Images/meditation.png'))
+# dialog_image.setAlignment(QtCore.Qt.AlignCenter)
+# dialog_text = QLabel()
+# dialog_text.setText('This algorithm takes longer than usual.\n Bear with us...')
+# dialog_patience = QDialog()
+# dialog_patience.setWindowTitle("Dialog")
+# dialog_patience.setWindowIcon(QtGui.QIcon('Images/heart.png'))
+# dialog_patience.setWindowModality(QtCore.Qt.NonModal)
+# dialog_layout = QVBoxLayout()
+# dialog_layout.addWidget(dialog_image)
+# dialog_layout.addWidget(dialog_text)
+# dialog_patience.setLayout(dialog_layout)
 
 # print("original sample: ", sample)
 
@@ -526,7 +526,7 @@ def ann_algorithm():
     # msg_wait.setDetailedText("This option takes longer than usual")
     # msg_wait.open()
 
-    dialog_patience.open()
+    # dialog_patience.open()
 
     # Importing the Keras libraries and packages
 
@@ -565,7 +565,7 @@ def ann_algorithm():
     b = 'Accuracy: ' + str(y) + "%"
 
     # msg_wait.close()
-    dialog_patience.close()
+    # dialog_patience.close()
     # Accuracy and Prediction
     return [a, b]
 
